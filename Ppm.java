@@ -17,53 +17,74 @@ import javax.swing.JOptionPane;
 
 public class Ppm 
 {
-
-	private static ArithEncoder codificadorAritmetico;
-	private static ArithDecoder decodificadorAritmetico;
-	
 	
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) 
     {
-    	setupTabela();
+    	Object[] options = {"Comprimir", "Descomprimir", "Cancelar"};
     	
-        String pathFileSource = getPathToFileSource();
-        System.out.println("[Source] File path: " + pathFileSource);
-        String pathFileTarget = getPathToFileTarget( pathFileSource );
-        System.out.println("[Target] File path: " + pathFileTarget);
-        
-        montaTabela( pathFileSource, pathFileTarget );
-        //Usando
-        //codificadorAritmetico.encode(lowCount, highCount, totalCount);
-        
-        //E depois pra decodificar
-        //int[3] counts;
-        //removeSymbolFromStream(counts);
-        //E depois eh so usar o counts 
-    }
+    	int resultado = JOptionPane.showOptionDialog(null,"Você deseja comprimir ou descomprimir?",
+                                                          "PPM Compressor/Descompressor",
+                                                          JOptionPane.YES_NO_CANCEL_OPTION,
+                                                          JOptionPane.PLAIN_MESSAGE,
+                                                          null,
+                                                          options,
+                                                          null
+                                                    );
+    	if(resultado == JOptionPane.YES_OPTION || resultado == JOptionPane.NO_OPTION)
+    	{
+    		
+    		String pathFileSource = getPathToFileSource();
+    		System.out.println("[Source] File path: " + pathFileSource);
 
-	private static void setupTabela()
-	{
-		try 
-		{
-			//Recebe arquivo onde sera salvo os codigos comprimidos
-			codificadorAritmetico = new ArithEncoder(new FileOutputStream("res.ppm"));
-			
-			//Recebe o arquivo de onde sera extraido o codigo comprimido 
-			decodificadorAritmetico = new ArithDecoder(new FileInputStream("res.ppm"));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
 
-	private static String getPathToFileTarget( String pathFileSource ) 
+    		if(resultado == JOptionPane.YES_OPTION)
+    		{
+                String pathFileTarget = getPathToFileTarget( pathFileSource );
+                System.out.println("[Target] File path: " + pathFileTarget);
+    			
+                //Criacao do codificador aritmetico
+        		ArithEncoder codificadorAritmetico;
+				try {
+					codificadorAritmetico = new ArithEncoder(new FileOutputStream(pathFileTarget));
+				} catch (FileNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        
+
+        		//Codigo para o PPM Compressor
+				//Deve vir aqui
+    			
+    		}
+    		else
+    		{
+    			//Criacao do decodificador aritmetico
+    			ArithDecoder decodificadorAritmetico;
+				try {
+					decodificadorAritmetico = new ArithDecoder(new FileInputStream(pathFileSource));
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    			
+    			//Codigo para o PPM Descompressor
+				//Deve vir aqui
+    			
+    		}
+    		
+    	}
+    	else
+    	{
+    		JOptionPane.showMessageDialog(null, "O programa está sendo encerrado!");
+    	}
+
+
+    }	
+    
+    private static String getPathToFileTarget( String pathFileSource ) 
 	{
 		//Pega a posicao do ultimo ponto da String 
 		int pointPos = pathFileSource.lastIndexOf('.');
@@ -71,14 +92,9 @@ public class Ppm
 		//Se o caminho foi c:\teste.txt, a saida sera c:\teste.ppm
 		return pathFileSource.substring(0, pointPos) + ".ppm";
 	}
-
-	private static void montaTabela(String fileSource, String fileTarget) 
+    
+	private static String getPathToFileSource() 
 	{
-		
-		
-	}
-
-	private static String getPathToFileSource() {
 	
 		JFileChooser janela = new JFileChooser();
 		
