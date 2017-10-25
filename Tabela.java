@@ -10,6 +10,8 @@ public class Tabela {
 	public int contador;
 	public int tamLTexto;
 	public int tamLAlfabeto;
+	public Contexto contextoAuxParaExclusao = new Contexto();
+	public Simbolos simbolosAuxParaExclusao = new Simbolos();
 	
 	//construtor
 	public Tabela(int k) {

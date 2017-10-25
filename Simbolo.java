@@ -11,6 +11,10 @@ public class Simbolo {
 		this.simbolo = c;
 	}
 	
+	public Simbolo() {
+		//super();
+	}
+	
 	public String toString() {
 		return simbolo.toString();
 	}
