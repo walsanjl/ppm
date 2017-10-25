@@ -9,7 +9,7 @@ public class Tabela {
 	public ArrayList<Informacao> lInformacao = new ArrayList<Informacao>();
 	public int contador;
 	public int tamLTexto;
-	public int tamLAlfabeto;
+	public int tamLAlfabetoInicial;
 	public Contexto contextoAuxParaExclusao = new Contexto();
 	public Simbolos simbolosAuxParaExclusao = new Simbolos();
 	
