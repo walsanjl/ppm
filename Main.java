@@ -1,11 +1,15 @@
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+
+import com.colloquial.arithcode.*;
 
 public class Main {
 
@@ -17,7 +21,7 @@ public class Main {
 	public static void main(String[] args) throws IOException {
 		//----- ATRIBUTOS -----//
 		
-		//recebendo o valor de k
+		//}recebendo o valor de k
 		//Scanner s = new Scanner( System.in );
 		//System.out.print("Digite o valor de k: ");
 		//int k = s.nextInt();
@@ -27,9 +31,8 @@ public class Main {
 		// criando a tabela
 		Tabela tabela = new Tabela(k);
 		
-		
 		//leitura do arquivo de texto
-		String nomeDoArquivo = "/home/walsan/workspace/PPM/src/arquivosDeTexto/mamada.txt";
+		String nomeDoArquivo = "/home/walsan/workspace/PPM/src/arquivosDeTexto/texto2.txt";
 		try {
 			FileReader arquivoEntrada = new FileReader(nomeDoArquivo);
 			BufferedReader lerArquivo = new BufferedReader(arquivoEntrada);
@@ -107,10 +110,10 @@ public class Main {
 		//setando o contador (coluna do k = -1)
 		tabela.contador = tabela.tamLAlfabetoInicial;
 		
-		tabela.coluna0.lSimbolo.add( new Simbolo( tabela.lTexto.get(0)));
-		tabela.coluna0.lSimbolo.get(0).contador = 1;
-		tabela.coluna0.lSimbolo.add( new Simbolo( new Character( (char) 27 ) ));
-		tabela.coluna0.lSimbolo.get(1).contador = 1;
+		tabela.coluna0.lSimbolo.add( new Simbolo( tabela.lTexto.get(0), 1));
+		//tabela.coluna0.lSimbolo.get(0).contador = 1;
+		tabela.coluna0.lSimbolo.add( new Simbolo( new Character( (char) 27 ), 1 ));
+		//tabela.coluna0.lSimbolo.get(1).contador = 1;
 		
 		int indiceNoAlfabeto = tabela.lAlfabeto.indexOf( tabela.lTexto.get(0) );
 		System.out.println("indiceNoAlfabeto = " + indiceNoAlfabeto);
@@ -129,110 +132,36 @@ public class Main {
 		tabela.lAlfabeto.remove( indiceNoAlfabeto );
 		//System.out.println(tabela.lAlfabeto.size());
 		
-		/*
-		Contexto contextoAuxParaExclusao = new Contexto();
-		System.out.println( contextoAuxParaExclusao.contexto == null );
-		Simbolo simboloAuxParaExclusao = new Simbolo();
-		System.out.println( simboloAuxParaExclusao.simbolo == null );
-		*/
-		
 		//tabela.lContextos.get(1).lContexto.add( new Contexto( "ma" ) );
 		//tabela.lContextos.get(1).lContexto.get(0).lSimbolo.add( new Simbolo( 'm' ) );
 		//tabela.lContextos.get(1).lContexto.get(0).lSimbolo.add( new Simbolo( 'd' ) );
-		
-		/*
-		 * codigo teste de conversão de char para string
-		 * 
-		char c = tabela.lTexto.get(0).charValue();
-		System.out.println(c);
-		int low = tabela.lAlfabeto.indexOf(c);
-		System.out.println("low = "+low);
-		int high = tabela.lAlfabeto.indexOf(c)+1;
-		System.out.println("high = "+high);
-		int total = tabela.contador;
-		
-		//atuali2ando
-		tabela.contador--;
-		System.out.println("total = "+total);
-		tabela.lAlfabeto.remove(0);
-		
-		System.out.println(tabela.coluna0.lSimbolo.size());
-		tabela.coluna0.lSimbolo.add(new Simbolo());
-		tabela.coluna0.lSimbolo.get(0).simbolo = new Character(c);
-		System.out.println(tabela.coluna0.lSimbolo.size());
-		
-		//setando a variavel c com o codigo asc correspondente ao esc
-		System.out.println(tabela.coluna0.lSimbolo.get(0).simbolo);
-		
-		c = 98;
-		tabela.coluna0.lSimbolo.add(new Simbolo());
-		tabela.coluna0.lSimbolo.get(0).simbolo = new Character(c);
-		System.out.println(tabela.coluna0.lSimbolo.get(0).simbolo);
-		*/
-		
-		
-		//teste da coluna 0
-		//tabela.coluna0.lSimbolo.add( new Simbolo() );
-		//tabela.coluna0.lSimbolo.get(0).simbolo = 'm';
 		
 		//le todos os caracteres do texto e atualisa a tabela
 		for(int i = 1; i < tabela.tamLTexto; i++) {
 			tabela = lerSimboloCodificaEAtualizaTabela(tabela, i);
 		}
 		
-		/*
-		//ler o texto caracter por caracter e atualisar a tabela do ppm
-		for(int i = 0; i < tabela.lTexto.size(); i++) {
-			
-			Character cAux = tabela.lTexto.get(i);
-			
-			System.out.println("i = " + i);
-			//char cAux = tabela.lTexto.get(i).charValue();
-			//percorre as colunas de conteto da tabela
-			for(int j = k; j >= 0; j--) {
-				System.out.println("j = " + j);
-				String contextoAux = new String();
-				for(int w = i-k; w < i; w++ ) {
-					try{
-						contextoAux = contextoAux + tabela.lTexto.get(w).toString();
-					
-					} catch (IndexOutOfBoundsException e) {
-						//System.out.println("deu erro try 1");
-					}
-				}
-				System.out.println("ja tenho o contx"); //aqui eu jah tenho o contexto
-				
-				//System.out.println("j = "+j);
-				try{
-					//System.out.println( tabela.lContextos.get(j).lContexto.isEmpty() );
-					
-					if( existeContexto(tabela, contextoAux, j) ) {
-						//passa direto
-						System.out.println(contextoAux + " existe");
-						
-						
-					} else {
-						System.out.println(contextoAux + " nao existe");
-						
-						if( j == 0 ) {
-							System.out.println("aaaaaaaaai");
-							//coluna do k = 0
-							if(existeSimbolo(tabela, cAux)) {
-								
-							}	
-						} else {
-							//demais colunas
-							System.out.println("uuuuuuuuui");
-						}	
-					}
-				} catch (IndexOutOfBoundsException e) {
-					System.out.println("deu erro minha try2");
-				} 
-			} //fim do for que percorre os contextos
-		}
-		 */
+		//imprimeInformacao(tabela.lInformacao);
 		
-		imprimeInformacao(tabela.lInformacao);
+		OutputStream output;
+		try {
+            output = new FileOutputStream("/home/walsan/workspace/PPM/src/arquivosDeTexto/saidaEncoder.txt");
+            //System.out.println("tchain");
+            BitOutput bitOutPut = new BitOutput( output );
+    		ArithEncoder arithEncoder = new ArithEncoder( bitOutPut );
+    		for( int i = 0; i < tabela.lInformacao.size(); i++ ) {
+    			arithEncoder.encode(tabela.lInformacao.get(i).low, tabela.lInformacao.get(i).high, 
+    					tabela.lInformacao.get(i).total);
+    			//System.out.println("Eu não dou nem cartáissssss");
+    		}
+    		
+    		arithEncoder.close(); 	//esvaziar o buffer
+    		output.close();	//
+            
+	     } catch (IOException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	     }
 		
 	}//fim do metodo main
 
@@ -266,10 +195,88 @@ public class Main {
 				if( indiceDoContextoNaColuna >= 0 ) { //existe o contexto na coluna
 					//int indiceDoSimboloNoContexto = existeSimboloNoContexto(simbolo, tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
 					
+					
+					//comeca aqui o codigo dos contextos sem exclusao
+					int indiceDoSimboloNoContexto = existeSimboloByte((byte)simbolo.hashCode(), 
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+					if( indiceDoSimboloNoContexto >= 0 ) { //o simbolo existe no contexto
+						
+						if( podeCodificar == 1 ) {
+							//codifica o simbolo
+							int low = 0;
+							int high = 0;
+							int total = 0;
+							for(int j = 0; j < indiceDoSimboloNoContexto; j++) {
+								low = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
+							}
+							high = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador;
+							for(int j = 0; j < tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.size(); j++) {
+								total = total + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
+							}
+							//System.out.println("low: " + low);
+							//System.out.println("high: " + high);
+							//System.out.println("total: " + total);
+							tabela.lInformacao.add( new Informacao( low, high, total, simbolo ) );
+							
+							//atualisar contexto
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador++;
+							//ordenar os simbolos
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
+									tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+							
+							//System.out.println(tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador);
+							podeCodificar = -1;
+						} else { // nao posso codificar, soh incrementar
+							//atualisar contexto
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador++;
+							//ordenar os simbolos
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
+									tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+						}
+						
+						 
+					} else { //o simbolo nao existe no contexto
+						//codifica o esc
+						int low = 0;
+						int high = 0;
+						int total = 0;
+						//int indiceDoEscNoContexto = existeSimboloNoContexto((char) 27, tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+						int indiceDoEscNoContexto = existeSimboloByte((byte) 27, tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+						//System.out.println("----------------------------"+indiceDoEscNoContexto);
+						for(int j = 0; j < indiceDoEscNoContexto; j++) {
+							low = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
+						}
+						//ERRORRRRR AQUI!!!!!!!!!!###########################################################################
+						//System.out.println("contESC "+tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador);
+						high = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador;
+						for(int j = 0; j < tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.size(); j++) {
+							total = total + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
+						}
+						//System.out.println("low: " + low);
+						//System.out.println("high: " + high);
+						//System.out.println("total: " + total);
+						tabela.lInformacao.add( new Informacao( low, high, total, (char) 27 ) );
+						
+						//atualisei o contador do esc
+						tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador++;
+						
+						//adiciono o simbolo ao contexto
+						tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.add( new Simbolo(simbolo, 1) );
+						//ordenar os simbolos
+						tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
+								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+						
+						
+						
+						
+					}
+					
+					
+					/*
 					//pergunto se o contexto aux estah vasio
 					if(tabela.contextoAuxParaExclusao.contexto == null) {  //fas normal
 
-						int indiceDoSimboloNoContexto = existeSimboloNoContexto(simbolo, 
+						int indiceDoSimboloNoContexto = existeSimboloByte((byte)simbolo.hashCode(), 
 								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
 						if( indiceDoSimboloNoContexto >= 0 ) { //o simbolo existe no contexto
 							
@@ -297,6 +304,7 @@ public class Main {
 										tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
 								
 								//System.out.println(tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador);
+								podeCodificar = -1;
 							} else { // nao posso codificar, soh incrementar
 								//atualisar contexto
 								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador++;
@@ -304,77 +312,59 @@ public class Main {
 								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
 										tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
 							}
-							podeCodificar = -1;
+							
 							 
 						} else { //o simbolo nao existe no contexto
+							//codifica o esc
+							int low = 0;
+							int high = 0;
+							int total = 0;
+							//int indiceDoEscNoContexto = existeSimboloNoContexto((char) 27, tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+							int indiceDoEscNoContexto = existeSimboloByte((byte) 27, tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+							//System.out.println("----------------------------"+indiceDoEscNoContexto);
+							for(int j = 0; j < indiceDoEscNoContexto; j++) {
+								low = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
+							}
+							//ERRORRRRR AQUI!!!!!!!!!!###########################################################################
+							//System.out.println("contESC "+tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador);
+							high = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador;
+							for(int j = 0; j < tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.size(); j++) {
+								total = total + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
+							}
+							//System.out.println("low: " + low);
+							//System.out.println("high: " + high);
+							//System.out.println("total: " + total);
+							tabela.lInformacao.add( new Informacao( low, high, total, (char) 27 ) );
 							
-							if( podeCodificar == 1 ) {		//posso codificar
-								//codifica o esc
-								int low = 0;
-								int high = 0;
-								int total = 0;
-								int indiceDoEscNoContexto = existeSimboloNoContexto((char) 27, tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo); 
-								for(int j = 0; j < indiceDoEscNoContexto; j++) {
-									low = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
-								}
-								high = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador;
-								for(int j = 0; j < tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.size(); j++) {
-									total = total + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
-								}
-								//System.out.println("low: " + low);
-								//System.out.println("high: " + high);
-								//System.out.println("total: " + total);
-								tabela.lInformacao.add( new Informacao( low, high, total, (char) 27 ) );
-								
-								//atualisei o contador do esc
-								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador++;
-								//ordenar os simbolos
-								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
-										tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
-								
-								//exclusao
-								if( i > 0 ) { //trabalhando com contextos
-									//copia o contexto atual
-									tabela.contextoAuxParaExclusao = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna);
-									//diminui o contexto em 1
-									tabela.contextoAuxParaExclusao.contexto = tabela.contextoAuxParaExclusao.contexto.substring(1);
-									//exclui o esc do aux
-									tabela.contextoAuxParaExclusao.lSimbolo.remove( 
-											existeSimboloNoContexto((char) 27, tabela.contextoAuxParaExclusao.lSimbolo));
-								} else { //trabalhando com simbolos
-									//copia o simbolos atual
-									tabela.simbolosAuxParaExclusao.lSimbolo = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo;
-									//exclui o esc do aux
-									tabela.simbolosAuxParaExclusao.lSimbolo.remove( 
-											existeSimboloNoContexto((char) 27, tabela.simbolosAuxParaExclusao.lSimbolo));
-								}
-								podeCodificar = -1;
-								
-							} else {	// nao posso codificar
-								//atualisei o contador do esc
-								int indiceDoEscNoContexto = existeSimboloNoContexto((char) 27, tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
-								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador++;
-								//ordenar os simbolos
-								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
-										tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
-								
-								//exclusao
-								if( i > 0 ) { //trabalhando com contextos
-									//copia o contexto atual
-									tabela.contextoAuxParaExclusao = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna);
-									//diminui o contexto em 1
-									tabela.contextoAuxParaExclusao.contexto = tabela.contextoAuxParaExclusao.contexto.substring(1);
-									//exclui o esc do aux
-									tabela.contextoAuxParaExclusao.lSimbolo.remove( 
-											existeSimboloNoContexto((char) 27, tabela.contextoAuxParaExclusao.lSimbolo));
-								} else { //trabalhando com simbolos
-									//copia o simbolos atual
-									tabela.simbolosAuxParaExclusao.lSimbolo = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo;
-									//exclui o esc do aux
-									tabela.simbolosAuxParaExclusao.lSimbolo.remove( 
-											existeSimboloNoContexto((char) 27, tabela.simbolosAuxParaExclusao.lSimbolo));
-								}
-							}	//fim do else de posso codificar
+							//atualisei o contador do esc
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador++;
+							
+							//exclusao
+							if( i > 0 ) { //trabalhando com contextos
+								//copia o contexto atual
+								tabela.contextoAuxParaExclusao = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna);
+								//diminui o contexto em 1
+								tabela.contextoAuxParaExclusao.contexto = tabela.contextoAuxParaExclusao.contexto.substring(1);
+								//exclui o esc do aux
+								tabela.contextoAuxParaExclusao.lSimbolo.remove( 
+										existeSimboloByte((byte) 27, tabela.contextoAuxParaExclusao.lSimbolo));
+										//existeSimboloNoContexto((char) 27, tabela.contextoAuxParaExclusao.lSimbolo));
+							} else { //trabalhando com simbolos
+								//copia o simbolos atual
+								tabela.simbolosAuxParaExclusao.lSimbolo = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo;
+								//exclui o esc do aux
+								tabela.simbolosAuxParaExclusao.lSimbolo.remove(
+										existeSimboloByte((byte) 27, tabela.simbolosAuxParaExclusao.lSimbolo));
+										//existeSimboloNoContexto((char) 27, tabela.simbolosAuxParaExclusao.lSimbolo));
+							}
+							
+							//adiciono o simbolo ao contexto
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.add( new Simbolo(simbolo, 1) );
+							//ordenar os simbolos
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
+									tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+							
+							
 							
 							
 						}
@@ -382,15 +372,13 @@ public class Main {
 						
 					} else { // fas com exclusao
 						
+						//crio um contexto auxiliar para a codificacao com exclusao
 						Contexto copia = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna);
-						for(int j = 0; j < copia.lSimbolo.size(); j++) {
-							int indiceAux = existeSimboloNoContexto(copia.lSimbolo.get(j).simbolo, tabela.contextoAuxParaExclusao.lSimbolo);
-							if( indiceAux >= 0 ) {
-								copia.lSimbolo.remove(indiceAux);
-							}
-						}
+						System.out.println("copia no contexto");
+						imprimeSimbolosDoContexto(copia);
 						
-						int indiceDoSimboloNoContexto = existeSimboloNoContexto(simbolo, 
+						
+						int indiceDoSimboloNoContexto = existeSimboloByte((byte)simbolo.hashCode(), 
 								copia.lSimbolo);
 						if( indiceDoSimboloNoContexto >= 0 ) { //o simbolo existe no contexto
 							
@@ -411,82 +399,76 @@ public class Main {
 								//System.out.println("total: " + total);
 								tabela.lInformacao.add( new Informacao( low, high, total, simbolo ) );
 								
-								//atualisar contexto
-								indiceDoSimboloNoContexto = existeSimboloNoContexto(simbolo, 
+								//atualisar contexto original
+								indiceDoSimboloNoContexto = existeSimboloByte((byte)simbolo.hashCode(), 
 										tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
 								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador++;
 								//System.out.println(tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador);
 								
-								//ordena os simbolos
+								//ordena os simbolos do contexto original
 								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
 										tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
 								podeCodificar = -1;
 								
-							} else {	// nao posso codificar
-								//atualisar contexto
-								indiceDoSimboloNoContexto = existeSimboloNoContexto(simbolo, 
-										tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
-								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador++;
-								//System.out.println(tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoSimboloNoContexto).contador);
-								
-								//ordena os simbolos
-								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
-										tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
-							} //fim do else de posso codificar
-							
-							
-							 
-						} else { //o simbolo nao existe no contexto
-							
-							if(podeCodificar == 1) {	// posso codificar
-								//codifica o esc
-								int low = 0;
-								int high = 0;
-								int total = 0;
-								int indiceDoEscNoContexto = existeSimboloNoContexto((char) 27, tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo); 
-								for(int j = 0; j < indiceDoEscNoContexto; j++) {
-									low = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
-								}
-								high = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador;
-								for(int j = 0; j < tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.size(); j++) {
-									total = total + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
-								}
-								//System.out.println("low: " + low);
-								//System.out.println("high: " + high);
-								//System.out.println("total: " + total);
-								tabela.lInformacao.add( new Informacao( low, high, total, (char) 27 ) );
-								
-								//atualisei o contador do esc
-								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador++;
-								
-								//adiciona o simbolo que nao existe no contexto
-								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.add( new Simbolo( simbolo ) );
-								
-								//seta os objetos auxiliares para eclusao
-								if( i > 0 ) { //trabalhando com contextos
-									//copia o contexto atual
-									tabela.contextoAuxParaExclusao = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna);
-									//diminui o contexto em 1
-									tabela.contextoAuxParaExclusao.contexto = tabela.contextoAuxParaExclusao.contexto.substring(1);
-									//exclui o esc do aux
-									tabela.contextoAuxParaExclusao.lSimbolo.remove( 
-											existeSimboloNoContexto((char) 27, tabela.contextoAuxParaExclusao.lSimbolo));
-								} else { //trabalhando com simbolos
-									//copia o simbolos atual
-									tabela.simbolosAuxParaExclusao.lSimbolo = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo;
-									//exclui o esc do aux
-									tabela.simbolosAuxParaExclusao.lSimbolo.remove( 
-											existeSimboloNoContexto((char) 27, tabela.simbolosAuxParaExclusao.lSimbolo));
-								}
-								
-								//ordena os simbolos
-								tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
-										tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
-								
-								podeCodificar = -1;
-							} else {	// nao posso codificar
-								//nuca vai entrar aqui pois se o simbolo nao existe, eu sempre vou codificar
 							}
+							
+						} else { //o simbolo nao existe no contexto
+							//codifica o esc
+							int low = 0;
+							int high = 0;
+							int total = 0;
+							//int indiceDoEscNoContexto = existeSimboloNoContexto((char) 27, tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo); 
+							//int indiceDoEscNoContexto = existeSimboloNoContexto((char) 27, copia.lSimbolo);
+							int indiceDoEscNoContexto = existeSimboloByte((byte) 27, copia.lSimbolo);
+							for(int j = 0; j < indiceDoEscNoContexto; j++) {
+								//low = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(j).contador;
+								low = low + copia.lSimbolo.get(j).contador;
+							}
+							//System.out.println(low);
+							//System.out.println( "copia contexto"+copia.contexto.isEmpty() );
+							//System.out.println( "copia contador"+copia.lSimbolo.get(0).contador );
+							//System.out.println("contador do esc = "+ copia.lSimbolo.get(indiceDoEscNoContexto).contador);
+							//high = low + tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador;
+							high = low + copia.lSimbolo.get(indiceDoEscNoContexto).contador;
+							
+							for(int j = 0; j < copia.lSimbolo.size(); j++) {
+								total = total + copia.lSimbolo.get(j).contador;
+							}
+							//System.out.println("low: " + low);
+							//System.out.println("high: " + high);
+							//System.out.println("total: " + total);
+							tabela.lInformacao.add( new Informacao( low, high, total, (char) 27 ) );
+							
+							//atualisei o contador do esc
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.get(indiceDoEscNoContexto).contador++;
+							
+							//exclusao
+							if( i > 0 ) { //trabalhando com contextos
+								//copia o contexto atual
+								tabela.contextoAuxParaExclusao = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna);
+								//diminui o contexto em 1
+								tabela.contextoAuxParaExclusao.contexto = tabela.contextoAuxParaExclusao.contexto.substring(1);
+								//exclui o esc do aux
+								tabela.contextoAuxParaExclusao.lSimbolo.remove( 
+										existeSimboloByte((byte) 27, tabela.contextoAuxParaExclusao.lSimbolo));
+										//existeSimboloNoContexto((char) 27, tabela.contextoAuxParaExclusao.lSimbolo));
+							} else { //trabalhando com simbolos
+								//copia o simbolos atual
+								tabela.simbolosAuxParaExclusao.lSimbolo = tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo;
+								//exclui o esc do aux
+								tabela.simbolosAuxParaExclusao.lSimbolo.remove(
+										existeSimboloByte((byte) 27, tabela.simbolosAuxParaExclusao.lSimbolo));
+										//existeSimboloNoContexto((char) 27, tabela.simbolosAuxParaExclusao.lSimbolo));
+							}
+							
+							//adiciona o simbolo que nao existe no contexto
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo.add( new Simbolo( simbolo, 1 ) );
+							
+							//ordena os simbolos
+							tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo = ordenaSimbolos(
+									tabela.lContextos.get(i).lContexto.get(indiceDoContextoNaColuna).lSimbolo);
+							
+							
 							
 							
 						}// fim do else do nao existe no contexto
@@ -494,22 +476,116 @@ public class Main {
 						
 						
 					}// fim do else
-					
+					*/
 					
 				} else { // nao existe contexto
-					//adiciona contexto
+					//adiciona um novo contexto já com o simbolo e com o esc
 					tabela.lContextos.get(i).lContexto.add( new Contexto( contextoAux, simbolo ) );
 					
 					//System.out.println(contextoAux);
 				}
-			}
-		}//fim do for que percorre as colunas
+			}//fim do for que percorre as colunas
+		}//fim do if que valida o contexto
 		
 		//codigo da coluna do k = 0
 		
+		//comeca o codigo do k = 0 sem exclusao
+		int indiceAux2 = existeSimboloByte((byte)simbolo.hashCode(), tabela.coluna0.lSimbolo);
+		if( indiceAux2 >= 0 ) { //o simbolo existe na coluna 0
+			
+			if(podeCodificar == 1) {	//posso codificar
+				//codifica o simbolo
+				int low = 0;
+				int high = 0;
+				int total = 0;
+				for(int j = 0; j < indiceAux2; j++) {
+					low = low + tabela.coluna0.lSimbolo.get(j).contador;
+				}
+				high = low + tabela.coluna0.lSimbolo.get(indiceAux2).contador;
+				for(int j = 0; j < tabela.coluna0.lSimbolo.size(); j++) {
+					total = total + tabela.coluna0.lSimbolo.get(j).contador;
+				}
+				//System.out.println("low: " + low);
+				//System.out.println("high: " + high);
+				//System.out.println("total: " + total);
+				tabela.lInformacao.add( new Informacao( low, high, total, simbolo ) );
+				
+				//incrementa contador do simbolo
+				tabela.coluna0.lSimbolo.get( indiceAux2 ).contador++;
+				
+				//ordena os simbolos
+				tabela.coluna0.lSimbolo = ordenaSimbolos( tabela.coluna0.lSimbolo );
+				
+				//podeCodificar = -1;
+				
+			} else {	//nao posso codificar
+				//incrementa contador do simbolo
+				tabela.coluna0.lSimbolo.get( indiceAux2 ).contador++;
+				
+				//ordena os simbolos
+				tabela.coluna0.lSimbolo = ordenaSimbolos( tabela.coluna0.lSimbolo );
+			}
+			
+		} else { // o simbolo NAO existe na coluna 0
+			//System.out.println("----------------------------rains");
+			//codifica o esc
+			int low = 0;
+			int high = 0;
+			int total = 0;
+			//int indiceDoEscNosSimbolos = existeSimboloNoContexto((char) 27, tabela.coluna0.lSimbolo);
+			int indiceDoEscNosSimbolos = existeSimboloByte((byte) 27, tabela.coluna0.lSimbolo);
+			//System.out.println(indiceDoEscNosSimbolos);
+			for(int j = 0; j < indiceDoEscNosSimbolos; j++) {
+				low = low + tabela.coluna0.lSimbolo.get(j).contador;
+			}
+			high = low + tabela.coluna0.lSimbolo.get(indiceDoEscNosSimbolos).contador;
+			for(int j = 0; j < tabela.coluna0.lSimbolo.size(); j++) {
+				total = total + tabela.coluna0.lSimbolo.get(j).contador;
+			}
+			//System.out.println("low: " + low);
+			//System.out.println("high: " + high);
+			//System.out.println("total: " + total);
+			tabela.lInformacao.add( new Informacao( low, high, total, (char) 27 ) );
+			
+			//atualisei o contador do esc
+			tabela.coluna0.lSimbolo.get(indiceDoEscNosSimbolos).contador++;
+			
+			//se o contador do esco for igual ao tamAlfabetoInicial eu removo o esc dos simbolos
+			if( tabela.coluna0.lSimbolo.get(indiceDoEscNosSimbolos).contador == tabela.tamLAlfabetoInicial ) {
+				tabela.coluna0.lSimbolo.remove( indiceDoEscNosSimbolos );
+			}
+			
+			//codifica o simbolo baseado no alfabeto
+			int indiceNoAlfabeto = tabela.lAlfabeto.indexOf( simbolo );
+			//System.out.println("simbolo = "+simbolo);
+			//System.out.println("coluna 0 nao eiste simbolo = indiceNoAlfabeto = "+indiceNoAlfabeto);
+			low = indiceNoAlfabeto;
+			high = 0;
+			total = 0;
+			high = low + 1;
+			total = tabela.lAlfabeto.size();
+			//System.out.println("low: " + low);
+			//System.out.println("high: " + high);
+			//System.out.println("total: " + total);
+			tabela.lInformacao.add( new Informacao( low, high, total, simbolo ) );
+			
+			//adiciona o simbolo que nao existe na tabela de simbolos
+			tabela.coluna0.lSimbolo.add( new Simbolo( simbolo, 1 ) );
+			//tabela.coluna0.lSimbolo.get((tabela.coluna0.lSimbolo.size() - 1)).contador = 1;
+			//tabela.coluna0.lSimbolo.get( existeSimboloNoContexto(simbolo, tabela.coluna0.lSimbolo) ).contador = 1;
+			
+			//exclui o simbolo do alfabeto
+			tabela.lAlfabeto.remove( indiceNoAlfabeto );
+			
+			//ordena os simbolos
+			tabela.coluna0.lSimbolo = ordenaSimbolos( tabela.coluna0.lSimbolo );
+			
+		}
+		
+		/*
 		//pergunto se o simbolosAuxParaExclusao aux estah vasio
 		if(tabela.simbolosAuxParaExclusao.lSimbolo == null) {	//fas normal
-			int indiceAux2 = existeSimboloNoContexto(simbolo, tabela.coluna0.lSimbolo);
+			int indiceAux2 = existeSimboloByte((byte)simbolo.hashCode(), tabela.coluna0.lSimbolo);
 			if( indiceAux2 >= 0 ) { //o simbolo existe na coluna 0
 				
 				if(podeCodificar == 1) {	//posso codificar
@@ -528,13 +604,14 @@ public class Main {
 					//System.out.println("high: " + high);
 					//System.out.println("total: " + total);
 					tabela.lInformacao.add( new Informacao( low, high, total, simbolo ) );
+					
 					//incrementa contador do simbolo
 					tabela.coluna0.lSimbolo.get( indiceAux2 ).contador++;
 					
 					//ordena os simbolos
 					tabela.coluna0.lSimbolo = ordenaSimbolos( tabela.coluna0.lSimbolo );
 					
-					podeCodificar = -1;
+					//podeCodificar = -1;
 					
 				} else {	//nao posso codificar
 					//incrementa contador do simbolo
@@ -545,12 +622,13 @@ public class Main {
 				}
 				
 			} else { // o simbolo NAO existe na coluna 0
-				
+				System.out.println("----------------------------rains");
 				//codifica o esc
 				int low = 0;
 				int high = 0;
 				int total = 0;
-				int indiceDoEscNosSimbolos = existeSimboloNoContexto((char) 27, tabela.coluna0.lSimbolo);
+				//int indiceDoEscNosSimbolos = existeSimboloNoContexto((char) 27, tabela.coluna0.lSimbolo);
+				int indiceDoEscNosSimbolos = existeSimboloByte((byte) 27, tabela.coluna0.lSimbolo);
 				//System.out.println(indiceDoEscNosSimbolos);
 				for(int j = 0; j < indiceDoEscNosSimbolos; j++) {
 					low = low + tabela.coluna0.lSimbolo.get(j).contador;
@@ -574,8 +652,8 @@ public class Main {
 				
 				//codifica o simbolo baseado no alfabeto
 				int indiceNoAlfabeto = tabela.lAlfabeto.indexOf( simbolo );
-				System.out.println("simbolo = "+simbolo);
-				System.out.println("coluna 0 nao eiste simbolo = indiceNoAlfabeto = "+indiceNoAlfabeto);
+				//System.out.println("simbolo = "+simbolo);
+				//System.out.println("coluna 0 nao eiste simbolo = indiceNoAlfabeto = "+indiceNoAlfabeto);
 				low = indiceNoAlfabeto;
 				high = 0;
 				total = 0;
@@ -587,9 +665,10 @@ public class Main {
 				tabela.lInformacao.add( new Informacao( low, high, total, simbolo ) );
 				
 				//adiciona o simbolo que nao existe na tabela de simbolos
-				tabela.coluna0.lSimbolo.add( new Simbolo( simbolo ) );
+				tabela.coluna0.lSimbolo.add( new Simbolo( simbolo, 1 ) );
 				//tabela.coluna0.lSimbolo.get((tabela.coluna0.lSimbolo.size() - 1)).contador = 1;
-				tabela.coluna0.lSimbolo.get( existeSimboloNoContexto(simbolo, tabela.coluna0.lSimbolo) ).contador = 1;
+				//tabela.coluna0.lSimbolo.get( existeSimboloNoContexto(simbolo, tabela.coluna0.lSimbolo) ).contador = 1;
+				
 				//exclui o simbolo do alfabeto
 				tabela.lAlfabeto.remove( indiceNoAlfabeto );
 				
@@ -599,64 +678,64 @@ public class Main {
 			}
 		} else {	 // fas com exclusao
 			Simbolos copia = tabela.coluna0;
-			//esse laço remove todos os simbolos da copia que estiverem no objetoAuiliar
-			for(int j = 0; j < copia.lSimbolo.size(); j++) {
-				int indiceAux = existeSimboloNoContexto(copia.lSimbolo.get(j).simbolo, tabela.simbolosAuxParaExclusao.lSimbolo);
-				if( indiceAux >= 0 ) {
-					copia.lSimbolo.remove(indiceAux);
-				}
-			}
+			System.out.println("copia do simbolos");
+			imprimeSimbolos(copia);
 			
-			int indiceAux2 = existeSimboloNoContexto(simbolo, copia.lSimbolo);
+			int indiceAux2 = existeSimboloByte((byte)tabela.hashCode(), copia.lSimbolo);
 			if( indiceAux2 >= 0 ) { //o simbolo existe na coluna 0
 				
-				if(podeCodificar == 1) {	//posso codificar
-					//codifica o simbolo
-					int low = 0;
-					int high = 0;
-					int total = 0;
-					for(int j = 0; j < indiceAux2; j++) {
-						low = low + copia.lSimbolo.get(j).contador;
-					}
-					high = low + copia.lSimbolo.get(indiceAux2).contador;
-					for(int j = 0; j < copia.lSimbolo.size(); j++) {
-						total = total + copia.lSimbolo.get(j).contador;
-					}
-					//System.out.println("low: " + low);
-					//System.out.println("high: " + high);
-					//System.out.println("total: " + total);
-					tabela.lInformacao.add( new Informacao( low, high, total, simbolo ) );
-
-					
-					//incrementa contador do simbolo no original
-					int indiceDoSimbolo = existeSimboloNoContexto(simbolo, tabela.coluna0.lSimbolo);
-					tabela.coluna0.lSimbolo.get( indiceDoSimbolo ).contador++;
-					
-					//ordena os simbolos
-					tabela.coluna0.lSimbolo = ordenaSimbolos( tabela.coluna0.lSimbolo );
-					
-					podeCodificar = -1;
-					
-				} else {	//nao posso codificar
-					//incrementa contador do simbolo no original
-					int indiceDoSimbolo = existeSimboloNoContexto(simbolo, tabela.coluna0.lSimbolo);
-					tabela.coluna0.lSimbolo.get( indiceDoSimbolo ).contador++;
-					
-					//ordena os simbolos
-					tabela.coluna0.lSimbolo = ordenaSimbolos( tabela.coluna0.lSimbolo );
+				//codifica o simbolo
+				int low = 0;
+				int high = 0;
+				int total = 0;
+				for(int j = 0; j < indiceAux2; j++) {
+					low = low + copia.lSimbolo.get(j).contador;
 				}
+				high = low + copia.lSimbolo.get(indiceAux2).contador;
+				for(int j = 0; j < copia.lSimbolo.size(); j++) {
+					total = total + copia.lSimbolo.get(j).contador;
+				}
+				//System.out.println("low: " + low);
+				//System.out.println("high: " + high);
+				//System.out.println("total: " + total);
+				tabela.lInformacao.add( new Informacao( low, high, total, simbolo ) );
+
+				
+				//incrementa contador do simbolo no original
+				int indiceDoSimbolo = existeSimboloByte((byte)tabela.hashCode(), tabela.coluna0.lSimbolo);
+				tabela.coluna0.lSimbolo.get( indiceDoSimbolo ).contador++;
+				
+				//ordena os simbolos
+				tabela.coluna0.lSimbolo = ordenaSimbolos( tabela.coluna0.lSimbolo );
 				
 			} else { // o simbolo NAO existe na coluna 0
+				
+				//System.out.println("simbolo ----------------------  "+copia.lSimbolo.get(1).simbolo);
 				
 				//codifica o esc
 				int low = 0;
 				int high = 0;
 				int total = 0;
-				int indiceDoEscNosSimbolos = existeSimboloNoContexto((char) 27, copia.lSimbolo);
+				//int indiceDoEscNosSimbolos = existeSimboloNoContexto((char) 27, copia.lSimbolo);
+				
+				int indiceDoEscNosSimbolos = 0;
+				for( int i = 0; i < copia.lSimbolo.size(); i++ ) {
+					int esc = copia.lSimbolo.get(i).simbolo.hashCode();
+					//System.out.println("==============================================="+esc);
+					if(esc == 27) {
+						//System.out.println("===============================================");
+						indiceDoEscNosSimbolos = i;
+					}
+				}
+				
+				//int indiceDoEscNosSimbolos = existeSimboloNoContexto( new Character( (char) 27 ) , copia.lSimbolo);
+				//System.out.println("indiceDoEscNosSimbolos = "+indiceDoEscNosSimbolos);
 				//System.out.println(indiceDoEscNosSimbolos);
 				for(int j = 0; j < indiceDoEscNosSimbolos; j++) {
 					low = low + copia.lSimbolo.get(j).contador;
 				}
+				//System.out.println("indiceESC "+indiceDoEscNosSimbolos);
+				//System.out.println(copia.lSimbolo.size());
 				high = low + copia.lSimbolo.get(indiceDoEscNosSimbolos).contador;
 				for(int j = 0; j < copia.lSimbolo.size(); j++) {
 					total = total + copia.lSimbolo.get(j).contador;
@@ -668,7 +747,15 @@ public class Main {
 				
 				
 				//atualisei o contador do esc no array de simbolos original
-				indiceDoEscNosSimbolos = existeSimboloNoContexto((char) 27, tabela.coluna0.lSimbolo);
+				//indiceDoEscNosSimbolos = existeSimboloNoContexto((char) 27, tabela.coluna0.lSimbolo);
+				for( int i = 0; i < tabela.coluna0.lSimbolo.size(); i++ ) {
+					int esc = tabela.coluna0.lSimbolo.get(i).simbolo.hashCode();
+					//System.out.println("==============================================="+esc);
+					if(esc == 27) {
+						//System.out.println("===============================================");
+						indiceDoEscNosSimbolos = i;
+					}
+				}
 				tabela.coluna0.lSimbolo.get(indiceDoEscNosSimbolos).contador++;
 				
 				//se o contador do esc for igual ao tamAlfabetoInicial eu removo o esc dos simbolos
@@ -691,19 +778,23 @@ public class Main {
 				tabela.lInformacao.add( new Informacao( low, high, total, simbolo ) );
 				
 				//adiciona o simbolo que nao existe na tabela de simbolos
-				tabela.coluna0.lSimbolo.add( new Simbolo( simbolo ) );
+				tabela.coluna0.lSimbolo.add( new Simbolo( simbolo,1 ) );
 				//tabela.coluna0.lSimbolo.get((tabela.coluna0.lSimbolo.size() - 1)).contador = 1;
-				tabela.coluna0.lSimbolo.get( existeSimboloNoContexto(simbolo, tabela.coluna0.lSimbolo) ).contador = 1;
+				//tabela.coluna0.lSimbolo.get( existeSimboloNoContexto(simbolo, tabela.coluna0.lSimbolo) ).contador = 1;
+
 				//exclui o simbolo do alfabeto
-				tabela.lAlfabeto.remove( indiceNoAlfabeto );
+				//System.out.println("valor do indiceNoAlfabeto = "+indiceNoAlfabeto);
+				if(indiceNoAlfabeto >= 0) {
+					tabela.lAlfabeto.remove( indiceNoAlfabeto );
+				}
+				
 				
 				//ordena os simbolos
 				tabela.coluna0.lSimbolo = ordenaSimbolos( tabela.coluna0.lSimbolo );
 				
 			}
-			
 		}
-		
+		*/
 		
 		
 		tabela.contextoAuxParaExclusao = new Contexto();
@@ -712,18 +803,107 @@ public class Main {
 		return tabela;
 	}
 
+	private static void imprimeSimbolosDoContexto(Contexto copia) {
+		for( int i = 0; i < copia.lSimbolo.size(); i++ ) {
+			System.out.print(""+copia.lSimbolo.get(i).simboloByte+" ");
+		}
+		System.out.println();
+		
+	}
+
+	private static void imprimeSimbolos(Simbolos copia) {
+		for( int i = 0; i < copia.lSimbolo.size(); i++ ) {
+			System.out.print(""+copia.lSimbolo.get(i).simboloByte+" ");
+		}
+		System.out.println();
+	}
+
 	private static int existeSimboloNoContexto(Character simbolo,
 			ArrayList<Simbolo> lSimbolo) {
-		
 		if( lSimbolo.isEmpty() == true ) {
+			//System.out.println("aaaaaaaaaaaaaaaaaaiiiiiiiii");
 			return -1;
 		} else {
+			
 			for(int i = 0; i < lSimbolo.size(); i++) {
-				if( simbolo.equals( lSimbolo.get(i).simbolo ) == true ) {
-					//System.out.println( lSimbolo.get(i).simbolo );
+				//System.out.println( "simbolo =  "+lSimbolo.get(i).simbolo.hashCode() );
+				//if( simbolo.equals( lSimbolo.get(i).simbolo ) == true ) {
+				//if( simbolo.equals( lSimbolo.get(i).simbolo.toString() ) == true ) {
+				if( simbolo == lSimbolo.get(i).simbolo ) {
+					//System.out.println( "simbolo =  "+lSimbolo.get(i).simbolo );
 					return i;
 				}
 			}
+			/*
+			for( int i = 0; i < lSimbolo.size(); i++ ) {
+				int esc = lSimbolo.get(i).simbolo.hashCode();
+				//System.out.println("==============================================="+esc);
+				if(esc == 27) {
+					//System.out.println("===============================================");
+					return i;
+				}
+			}*/
+			//System.out.println("uuuuuuuuuuuuuuuuiiiiiiiii");
+			return -1;
+		}// fim do else
+	}//fim do metodo 
+	
+	private static int existeSimboloByte(byte simbolo,
+			ArrayList<Simbolo> lSimbolo) {
+		if( lSimbolo.isEmpty() == true ) {
+			//System.out.println("aaaaaaaaaaaaaaaaaaiiiiiiiii");
+			return -1;
+		} else {
+			
+			for(int i = 0; i < lSimbolo.size(); i++) {
+				//System.out.println( "simbolo =  "+lSimbolo.get(i).simbolo.hashCode() );
+				//if( simbolo.equals( lSimbolo.get(i).simbolo ) == true ) {
+				//if( simbolo.equals( lSimbolo.get(i).simbolo.toString() ) == true ) {
+				if( simbolo == lSimbolo.get(i).simboloByte ) {
+					//System.out.println( "simbolo =  "+lSimbolo.get(i).simbolo );
+					return i;
+				}
+			}
+			/*
+			for( int i = 0; i < lSimbolo.size(); i++ ) {
+				int esc = lSimbolo.get(i).simbolo.hashCode();
+				//System.out.println("==============================================="+esc);
+				if(esc == 27) {
+					//System.out.println("===============================================");
+					return i;
+				}
+			}*/
+			//System.out.println("uuuuuuuuuuuuuuuuiiiiiiiii");
+			return -1;
+		}// fim do else
+	}//fim do metodo existeSimboloByte
+	
+	private static int existeEscNoContexto(Character simbolo,
+			ArrayList<Simbolo> lSimbolo) {
+		if( lSimbolo.isEmpty() == true ) {
+			//System.out.println("aaaaaaaaaaaaaaaaaaiiiiiiiii");
+			return -1;
+		} else {
+			/*
+			for(int i = 0; i < lSimbolo.size(); i++) {
+				System.out.println( "simbolo =  "+lSimbolo.get(i).simbolo.hashCode() );
+				//if( simbolo.equals( lSimbolo.get(i).simbolo ) == true ) {
+				//if( simbolo.equals( lSimbolo.get(i).simbolo.toString() ) == true ) {
+				if( simbolo == lSimbolo.get(i).simbolo ) {
+					System.out.println( "simbolo =  "+lSimbolo.get(i).simbolo );
+					return i;
+				}
+			}*/
+			
+			for( int i = 0; i < lSimbolo.size(); i++ ) {
+				int esc = lSimbolo.get(i).simbolo.hashCode();
+				//System.out.println("==============================================="+esc);
+				if(esc == 27) {
+					System.out.println("===============================================");
+					return i;
+				}
+			}
+			//System.out.println("uuuuuuuuuuuuuuuuiiiiiiiii");
 			return -1;
 		}// fim do else
 	}//fim do metodo 
@@ -754,7 +934,8 @@ public class Main {
 	
 	private static ArrayList<Simbolo> ordenaSimbolos(ArrayList<Simbolo> lSimbolo){
 		
-		if( existeSimboloNoContexto((char) 27, lSimbolo) >= 0 ) { //tem esc nos simbolos
+		//if( existeSimboloNoContexto((char) 27, lSimbolo) >= 0 ) { //tem esc nos simbolos
+		if( existeSimboloByte((byte) 27, lSimbolo) >= 0 ) { //tem esc nos simbolos
 			/*
 			//printando a lSimbolo para debug
 			for(int i = 0; i < lSimbolo.size(); i++) {
@@ -763,7 +944,8 @@ public class Main {
 			System.out.println();*/
 			
 			//lSimbolo.remove(lSimbolo.size() - 1); // exclui o esc
-			int indiceDoEscNosSimbolos = existeSimboloNoContexto((char) 27, lSimbolo);
+			//int indiceDoEscNosSimbolos = existeSimboloNoContexto((char) 27, lSimbolo);
+			int indiceDoEscNosSimbolos = existeSimboloByte((byte) 27, lSimbolo);
 			Simbolo escAux = lSimbolo.get( indiceDoEscNosSimbolos );
 			lSimbolo.remove(indiceDoEscNosSimbolos); // exclui o esc para nao atraaplhar na ordenacao
 			
