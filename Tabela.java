@@ -12,9 +12,11 @@ public class Tabela {
 	public int tamLAlfabetoInicial;
 	public Contexto contextoAuxParaExclusao = new Contexto();
 	public Simbolos simbolosAuxParaExclusao = new Simbolos();
+	public long[] tempoKsssss;		//array de tempo gasto por processamento de cada k
 	
 	//construtor
 	public Tabela(int k) {
+		this.tempoKsssss = new long[k];
 		//instancia as colunas da tabela de acordo com o valor de k
 		for(int i = 0; i <= k; i++) {
 			if (i == 0) {

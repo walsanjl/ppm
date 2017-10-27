@@ -32,7 +32,7 @@ public class Main {
 		Tabela tabela = new Tabela(k);
 		
 		//leitura do arquivo de texto
-		String nomeDoArquivo = "/home/walsan/workspace/PPM/src/arquivosDeTexto/texto2.txt";
+		String nomeDoArquivo = "/home/walsan/workspace/PPM/src/arquivosDeTexto/1mb.txt";
 		try {
 			FileReader arquivoEntrada = new FileReader(nomeDoArquivo);
 			BufferedReader lerArquivo = new BufferedReader(arquivoEntrada);
@@ -163,7 +163,18 @@ public class Main {
 	            e.printStackTrace();
 	     }
 		
+		System.out.println("tam do tempoKsssss = "+tabela.tempoKsssss.length);
+		imprimeOTempoDeExecucao(tabela.tempoKsssss);
+		
 	}//fim do metodo main
+
+	private static void imprimeOTempoDeExecucao(long[] tempoKsssss) {
+		for( int i = 0; i < tempoKsssss.length; i++ ) {
+			//System.out.println("k = "+i+" - "+tempoKsssss[i]+" mili seg");
+			System.out.println("k = "+i+" - "+(tempoKsssss[i]/1000)+" seg");
+			//System.out.println("k = "+i+" - "+(tempoKsssss[i]/60000)+" min");
+		}
+	}
 
 	private static void imprimeInformacao(ArrayList<Informacao> lInformacao) {
 		for(int i = 0; i < lInformacao.size(); i++) {
@@ -183,6 +194,10 @@ public class Main {
 		
 		//for que percorre o array de contextos
 		for(int i = tabela.lContextos.size()-1; i >= 0; i--) {
+			
+			// comeca a contar o tempo de execucao do contexto atual
+			long start = System.currentTimeMillis();
+			
 			boolean contextoValido = contextoValido( i+1, tabela.lTexto, indiceDeLeitura );
 			if( contextoValido == true ) {
 				String contextoAux = new String();
@@ -269,8 +284,7 @@ public class Main {
 						
 						
 						
-					}
-					
+					}					
 					
 					/*
 					//pergunto se o contexto aux estah vasio
@@ -485,9 +499,21 @@ public class Main {
 					//System.out.println(contextoAux);
 				}
 			}//fim do for que percorre as colunas
+			
+			// termina de contar o tempo de execucao do contexto atual
+			long elapsed = System.currentTimeMillis() - start;
+			//incrementa o tempo da execucao desse contexto para o k
+			//tabela.tempoKsssss[i] = tabela.tempoKsssss[i] + (elapsed/60000);	//tempo em minutos
+			//tabela.tempoKsssss[i] = tabela.tempoKsssss[i] + (elapsed/1000);	//tempo em segundos
+			tabela.tempoKsssss[i] = tabela.tempoKsssss[i] + (elapsed);	//tempo em millisegundos
+			
 		}//fim do if que valida o contexto
 		
+		
 		//codigo da coluna do k = 0
+		
+		// comeca a contar o tempo de execucao do contexto k = 0
+		long start = System.currentTimeMillis();
 		
 		//comeca o codigo do k = 0 sem exclusao
 		int indiceAux2 = existeSimboloByte((byte)simbolo.hashCode(), tabela.coluna0.lSimbolo);
@@ -795,6 +821,13 @@ public class Main {
 			}
 		}
 		*/
+		
+		// termina de contar o tempo de execucao do contexto k = 0
+		long elapsed = System.currentTimeMillis() - start;
+		//incrementa o tempo da execucao desse contexto para o k
+		//tabela.tempoKsssss[0] = tabela.tempoKsssss[0] + (elapsed/60000);	//tempo em minutos
+		//tabela.tempoKsssss[0] = tabela.tempoKsssss[0] + (elapsed/1000);	//tempo em segundos
+		tabela.tempoKsssss[0] = tabela.tempoKsssss[0] + (elapsed);	//tempo em segundos
 		
 		
 		tabela.contextoAuxParaExclusao = new Contexto();
